@@ -1,12 +1,21 @@
 package com.emp.service;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.UUID;
+import java.util.Objects;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
-import com.emp.request.EmployeeResponseDTO;
+import com.emp.entity.Employee;
+import com.emp.entity.Pharmacy;
+import com.emp.repository.EmployeeRepository;
+import com.emp.response.EmployeePharmacyResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,23 +23,79 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class EmployeeService {
 	
+	@Autowired
+	private EmployeeRepository employeeRepository;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
+	
+	@Autowired
+	private RestTemplate restTemplate;
+	
 	/** Below service method return employee details
 	 *  
 	 *  based on employee ID.
 	 * 
 	 * @param empId
-	 * @return EmployeeResponseDTO
+	 * @return Employee
 	 */
-	public EmployeeResponseDTO getEmployeeById(String empId) {
+	public Employee getEmployeeById(Long empId) {
 		log.info("EmployeeService::Input Value :{}",empId);
-		return EmployeeResponseDTO
-				.builder().aadharNumber("7453 5099 8193").accountCreatedTime(ZonedDateTime.now(ZoneId.systemDefault()))
-				.age(32).bankDetails("A/C : 059801532774, SANTHOSH REDDY YANALA, MINDSPACE BRANCH, ICIC0000598")
-				.companyName("Deloitte").currentAddress("Flat No : 204, Spring Valley, KRCR Colony, Road No 1, Bachupally, Hyderabad, 500090")
-				.dob("12-May-1987").empId("EMP0000100").fullName("SANTHOSH REDDY YANALA").gender("MALE")
-				.isCurrentAndPermanentSame(Boolean.FALSE).pandCardNo("ACHPY2046F").password("Basv@2808")
-				.permanentAddress("H.No: 1-43, Pallempu, Pahilwanpur, Valigonda, Yadadri-Bhuvanagiri, 508285")
-				.salaryPerMonth(150000.0d).uniqueId(UUID.randomUUID()).userId("yanalasanthoshreddy").userType("Employee").build();
+		return this.employeeRepository.findById(empId).orElse(null);
+	}
+	
+	
+	
+	/**
+	 * Below service method persist the employee data.
+	 * @param employee
+	 * @return Employee
+	 * @throws JsonProcessingException 
+	 */ 
+	@Transactional(isolation =Isolation.DEFAULT,propagation = Propagation.REQUIRES_NEW)
+	public Employee saveEmployee(Employee employee) throws JsonProcessingException {
+		log.info("Employee Create Request :{}",this.objectMapper.writeValueAsString(employee));
+		return this.employeeRepository.save(employee);
+	}
+
+
+	/**
+	 * Below service method persist the employee data.
+	 * @param employee
+	 * @return Employee
+	 * @throws JsonProcessingException 
+	 */ 
+	@Transactional(isolation =Isolation.DEFAULT,propagation = Propagation.REQUIRES_NEW)
+	public Employee editEmployee(Employee employee) throws JsonProcessingException {
+		log.info("Employee Update Request :{}",this.objectMapper.writeValueAsString(employee));
+		return this.employeeRepository.save(employee);
+	}
+
+
+	/**
+	 * Below service method persist the employee data.
+	 * @param employee
+	 * @return Employee
+	 * @throws JsonProcessingException 
+	 */ 
+	@Transactional(isolation =Isolation.DEFAULT,propagation = Propagation.REQUIRES_NEW)
+	public String deleteEmployee(Long empId) {
+		log.info("Employee Delete Request :{}",empId);
+		this.employeeRepository.deleteById(empId);
+		return "Successfully deleted the employee details for id :"+empId;
+	}
+
+
+
+	public EmployeePharmacyResponse getEmployeePharmacyDetailsById(Long empId) {
+		EmployeePharmacyResponse emplyeeResponse=new EmployeePharmacyResponse();
+		Employee employee=this.employeeRepository.findById(empId).orElse(null);
+		if(Objects.nonNull(employee)) {
+			ResponseEntity<Pharmacy> pharmacy=this.restTemplate.getForEntity("http://localhost:9999/pharmacy/details/"+empId,Pharmacy.class);
+			emplyeeResponse.setEmployee(employee);
+			emplyeeResponse.setPharmacy(pharmacy.getBody());
+		}
+		return emplyeeResponse;
 	}
 
 }

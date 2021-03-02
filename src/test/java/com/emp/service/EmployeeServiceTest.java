@@ -14,7 +14,7 @@ public class EmployeeServiceTest {
 	@Test
 	public void test() {
 		System.out.print("Hello test case execuated......................");
-		this.employeeService.getEmployeeById("EMP0000100");
+		this.employeeService.getEmployeeById(1l);
 	}
 
 }
