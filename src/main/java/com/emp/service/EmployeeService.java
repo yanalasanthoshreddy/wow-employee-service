@@ -91,7 +91,7 @@ public class EmployeeService {
 		EmployeePharmacyResponse emplyeeResponse=new EmployeePharmacyResponse();
 		Employee employee=this.employeeRepository.findById(empId).orElse(null);
 		if(Objects.nonNull(employee)) {
-			ResponseEntity<Pharmacy> pharmacy=this.restTemplate.getForEntity("http://localhost:9999/pharmacy/details/"+empId,Pharmacy.class);
+			ResponseEntity<Pharmacy> pharmacy=this.restTemplate.getForEntity("http://PHARMACY-SERVICE/pharmacy/details/"+empId,Pharmacy.class);
 			emplyeeResponse.setEmployee(employee);
 			emplyeeResponse.setPharmacy(pharmacy.getBody());
 		}

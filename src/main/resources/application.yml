@@ -3,16 +3,17 @@ server:
 
 spring:
   application:
-    name: wow-employee-service
+    name: EMPLOYEE-SERVICE
 eureka: #tells about the Eureka server details and its refresh time
     instance:
+      hostname: localhost
       leaseRenewalIntervalInSeconds: 1
       leaseExpirationDurationInSeconds: 2
     client:
       serviceUrl:
-        defaultZone: http://127.0.0.1:8761/eureka
+        defaultZone: http://localhost:8761/eureka/
       register-with-eureka: true
-        
+      
 logging:
   level:
     com: INFO

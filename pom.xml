@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.2</version>
+		<version>2.3.9.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.emp</groupId>
@@ -17,7 +17,7 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<spring-cloud.version>2020.0.0-M6</spring-cloud.version>
+		<spring-cloud.version>Hoxton.SR10</spring-cloud.version>
 	</properties>
 
 	<dependencies>
@@ -44,22 +44,12 @@
 		   <artifactId>springfox-swagger-ui</artifactId>
 		   <version>2.7.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.kafka</groupId>
-			<artifactId>kafka-streams</artifactId>
-		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-stream</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-stream-binder-kafka-streams</artifactId>
-		</dependency>
+		
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
